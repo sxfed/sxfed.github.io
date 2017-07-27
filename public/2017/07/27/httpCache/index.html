@@ -1,0 +1,88 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><meta name="author" content="随行付大前端"><link rel="icon" href="/hexo.png"><title></title><meta name="description"><link rel="alternate" type="application/rss+xml" href="/atom.xml"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.5.0/css/font-awesome.min.css"><link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css"><link rel="stylesheet" href="/css/main.css"><link rel="stylesheet" href="/css/highlight.css"><link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic"><link rel="stylesheet" href="//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800"></head><body><nav class="navbar navbar-default navbar-fixed-top navbar-custom"><div class="container-fluid"><div class="navbar-header"><button type="button" data-toggle="collapse" data-target="#main-navbar" class="navbar-toggle"><span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><a href="/" class="navbar-brand"></a></div><div id="main-navbar" class="collapse navbar-collapse"><ul class="nav navbar-nav navbar-right"><li><a href="/archives">Archive</a></li><li><a href="https://github.com/twoyao/beautiful-hexo">Github</a></li><li><a href="/about/">About</a></li></ul></div><div class="avatar-container"><div class="avatar-img-border"><a href="/"><img src="/hexo.png" class="avatar-img"></a></div></div></div></nav><header class="header-section"><div class="intro-header no-img"><div class="container"><div class="row"><div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1"><div class="post-heading"><h1>httpCache</h1><p class="post-meta">Posted on Jul 27 2017</p></div></div></div></div></div></header><div class="container"><div class="row"><div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1"><article role="main" class="blog-post"><h2 id="HTTP缓存"><a href="#HTTP缓存" class="headerlink" title="HTTP缓存"></a><center>HTTP缓存</center></h2><h3 id="引言-什么是缓存"><a href="#引言-什么是缓存" class="headerlink" title="引言 什么是缓存"></a>引言 什么是缓存</h3><blockquote>
+<p>&ensp;&ensp;通过url请求后台资源即慢,又比较耗流量,HTTP协议为我们提供了控制缓存部分以使Http客户端可以缓存和重用以前获取的资源，从而优化性能，提升体验。简单来说http缓存就是客户端缓存,将一些服务器上的静态文件(css,js,图片等)保存到本地,然后下次在次加载这个文件时根据http缓存方式,不去服务器端读取,而是直接在本地读取。</p>
+</blockquote>
+<p>我们先来看一下在http报文中相关首部的字段<br>请求报文和响应报文都能用上的字段</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cache-control</td>
+<td>控制是否被缓存</td>
+</tr>
+<tr>
+<td>pragma</td>
+<td>http1.0版本,值为no-cache时禁止缓存</td>
+</tr>
+</tbody>
+</table>
+<p>请求中(Request Headers)字段</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>If-Match</td>
+<td>比较ETag是否一致</td>
+</tr>
+<tr>
+<td>If-None-Match</td>
+<td>比较ETag是否一致</td>
+</tr>
+<tr>
+<td>If-Modified-Since</td>
+<td>比较资源最后更新时间是否一致</td>
+</tr>
+<tr>
+<td>If-UnModified-Since</td>
+<td>比较资源最后更新时间是否一致</td>
+</tr>
+</tbody>
+</table>
+<p>响应中(Response Headers)字段</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ETag</td>
+<td>匹配资源信息</td>
+</tr>
+<tr>
+<td>Last-Modified</td>
+<td>文件最后修改的时间</td>
+</tr>
+<tr>
+<td>Expires</td>
+<td>http1.0的属性,设置过期时间</td>
+</tr>
+</tbody>
+</table>
+<h4 id="一-nbsp-nbsp-缓存策略"><a href="#一-nbsp-nbsp-缓存策略" class="headerlink" title="一&nbsp;&nbsp;缓存策略"></a>一&nbsp;&nbsp;缓存策略</h4><h5 id="1-缓存存储策略"><a href="#1-缓存存储策略" class="headerlink" title="1.缓存存储策略"></a>1.缓存存储策略</h5><p><em>用来确定 HTTP 响应内容是否可以被客户端缓存，以及可以被哪些客户端缓存。</em> 利用属性Cache-Control 属性设置文件是否被缓存,其中常用的属性有public private max-age no-catch no-store其中前四种可以将文件缓存,而no-store 文件将不会被缓存,为什么是可能呢? 因为文件是有新鲜度(也就是是否过期)的,如果文件超过了新鲜度呢,接下来就要说缓存过期策略了</p>
+<h5 id="2-缓存过期策略"><a href="#2-缓存过期策略" class="headerlink" title="2. 缓存过期策略"></a>2. 缓存过期策略</h5><p><em>客户端用来确认存储在本地的缓存数据是否已过期，进而决定是否要发请求到服务端获取数据</em><br>既然文件缓存可以过期,那么就应该存在一个过期时间然后有一个字段去记录这个过期时间,在http1.0中用Expires来记录这个过期时间当超过这个有效时间后,本地缓存就作废了,就必须去服务器再次请求,不过在HTTP1.1中增加了Cache-Control 可以设置max-age来设置过期时间且<em>Cache-Control优先级高于Expires</em><br>但是缓存过期了,客户端的缓存一定不能用了吗?答案是否定的,接下来就是要说的缓存对比策略</p>
+<h5 id="3-缓存对比策略"><a href="#3-缓存对比策略" class="headerlink" title="3. 缓存对比策略"></a>3. 缓存对比策略</h5><p>将缓存在客户端的数据标识发往服务端，服务端通过标识来判断客户端 缓存数据是否仍有效，进而决定是否要重发数据。<br>客户端检测到数据过期或浏览器刷新后，往往会重新发起一个 http 请求到服务器，服务器此时并不急于返回数据，而是看请求头有没有带标识（ If-Modified-Since、If-None-Match）过来，如果判断标识仍然有效，则返回304告诉客户端取本地缓存数据来用即可（这里要注意的是你必须要在首次响应时输出相应的头信息（Last-Modified、ETags）到客户端）。至此我们就明白了上面所说的本地缓存数据即使被认为过期，并不等于数据从此就没用了的道理了。</p>
+<p>缓存的策略大致就是 通过Cache-Control或者是Expires设置本地缓存,当缓存过期后请求后台,后台根据Etag或If-Modified-Since 来判断当前缓存是否可用,可用则返回一个304状态吗,继续用这个缓存,不可用就会重新加载这个文件</p>
+<h4 id="二-强缓存与协商缓存"><a href="#二-强缓存与协商缓存" class="headerlink" title="二 强缓存与协商缓存"></a>二 强缓存与协商缓存</h4><h5 id="1-强缓存"><a href="#1-强缓存" class="headerlink" title="1.强缓存"></a>1.强缓存</h5><p>浏览器在第一次请求发生后，再次请求时:浏览器在请求某一资源时，会先获取该资源缓存的header信息，判断是否命中强缓存（cache-control和expires信息），若命中直接从缓存中获取资源信息，包括缓存header信息；本次请求根本就不会与服务器进行通信</p>
+<h5 id="2-协商缓存"><a href="#2-协商缓存" class="headerlink" title="2.协商缓存"></a>2.协商缓存</h5><p>如果没有命中强缓存,浏览器会发送请求到服务器,请求会携带第一次请求返回的有关缓存的header字段信息(Last-Modified/If-Modified-Since和Etag/If-None-Match),由服务器根据请求中的相关header信息来比对结果是否协商缓存命中;若命中,则服务器返回新的响应header信息更新缓存中的对应header信息,但是并不返回资源内容,它会告知浏览器可以直接从缓存获取;否则返回最新的资源内容;</p>
+<h5 id="3-强缓存与协商缓存的区别"><a href="#3-强缓存与协商缓存的区别" class="headerlink" title="3.强缓存与协商缓存的区别"></a>3.强缓存与协商缓存的区别</h5><p>相同点: 都是从缓存中读取数据<br>不同点: 强缓存不会请求服务器,而协商缓存同过访问服务器来告知缓存是否可用,强缓存返回状态吗200 (from cache) 协商缓存 返回304 (not modified)</p>
+<p>如果你看了上面的还是蒙蒙的那么请看下面,当我们第一次请求时打开network,我们将看到下图<br>当我们第一次请求某个网页时所有请求返回状态码均为200<br><img src="https://github.com/qiudong/sxfed.github.io/blob/master/bigimgs/1.png?raw=true" alt="Alt text"><br>当我们再次刷新时可以看到状态码变成了304,和200 size变成from cache<br><img src="https://github.com/qiudong/sxfed.github.io/blob/master/bigimgs/2.png?raw=true" alt="Alt text"><br>当状态码为200时我们点进去可以看到 属性cache-control:max-age属性 和 Expires 属性 可以看出时间均没过期,也就是这是个强缓存,这个文件不会请求服务器<br><img src="https://github.com/qiudong/sxfed.github.io/blob/master/bigimgs/3.png?raw=true" alt="Alt text"><br>当状态码为304时可以看到max-age=0也就是说会请求服务器,和服务器协商,然后服务器根据Eage或者 If-Modified-Since 来判断是否继续使用该缓存,如果判断成功,那么返回状态码304,并且继续使用该缓存,失败则重新加载文件<br><img src="https://github.com/qiudong/sxfed.github.io/blob/master/bigimgs/4.png?raw=true" alt="Alt text"><br>最后贴一张HTTP缓存的流程图<br><img src="https://github.com/qiudong/sxfed.github.io/blob/master/bigimgs/5.png?raw=true" alt="Alt text"></p>
+</article><ul class="pager blog-pager"><li class="next"><a href="/2017/07/27/hello-world/" data-toggle="tooltip" data-placement="top" title="Hello World">Next Post →</a></li></ul><div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div><script src="//img1.cache.netease.com/f2e/tie/yun/sdk/loader.js"> </script><script>var cloudTieConfig = {
+  url: document.location.href, 
+  sourceId: "",
+  productKey: "64d7f0abf9224be3bfdcc6cfb9b83fcf",
+  target: "cloud-tie-wrapper"
+};</script></div></div></div><footer><div class="container beautiful-jekyll-footer"><div class="row"><div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1"><ul class="list-inline text-center footer-links"><li><a href="https://github.com/twoyao" title="GitHub"><span class="fa-stack fa-lg"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-stack-1x fa-inverse fa-github"></i></span></a></li><li><a href="/atom.xml" title="RSS"><span class="fa-stack fa-lg"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-stack-1x fa-inverse fa-rss"></i></span></a></li><li><a href="https://twitter.com/twoyao_" title="Twitter"><span class="fa-stack fa-lg"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-stack-1x fa-inverse fa-twitter"></i></span></a></li><li><a href="mailto:bisyao@gmail.com" title="Email me"><span class="fa-stack fa-lg"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-stack-1x fa-inverse fa-envelope"></i></span></a></li></ul><p class="copyright text-muted">© 随行付大前端 • 2017 • <a href="mailto:undefined"></a>
+</p><p class="theme-by text-muted">Theme by
+<a href="https://github.com/twoyao/beautiful-hexo">beautiful-hexo</a></p></div></div></div></footer><script src="//cdn.bootcss.com/jquery/1.11.2/jquery.min.js"></script><script src="//cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script><script src="/js/main.js"></script><script src="//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script><script>hljs.initHighlightingOnLoad();</script></body></html>
