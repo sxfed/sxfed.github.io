@@ -61,3 +61,5 @@ tags:
 ![Alt text](https://github.com/qiudong/sxfed.github.io/blob/master/bigimgs/3.png?raw=true)
 当状态码为304时可以看到max-age=0也就是说会请求服务器,和服务器协商,然后服务器根据Eage或者 If-Modified-Since 来判断是否继续使用该缓存,如果判断成功,那么返回状态码304,并且继续使用该缓存,失败则重新加载文件
 ![Alt text](https://github.com/qiudong/sxfed.github.io/blob/master/bigimgs/4.png?raw=true)
+最后贴一张HTTP缓存的流程图
+![Alt text](https://github.com/qiudong/sxfed.github.io/blob/master/bigimgs/5.png?raw=true)
