@@ -31,10 +31,10 @@
   
   <entry>
     <title>Http Cache</title>
-    <link href="https://sxfed.github.io/2017/07/27/http-cache/"/>
-    <id>https://sxfed.github.io/2017/07/27/http-cache/</id>
+    <link href="https://sxfed.github.io/2017/07/27/http-cache-intro/"/>
+    <id>https://sxfed.github.io/2017/07/27/http-cache-intro/</id>
     <published>2017-07-27T06:07:32.000Z</published>
-    <updated>2017-07-28T01:26:45.000Z</updated>
+    <updated>2017-07-28T01:35:01.000Z</updated>
     
     <content type="html"><![CDATA[<h2 id="HTTP缓存"><a href="#HTTP缓存" class="headerlink" title="HTTP缓存"></a><center>HTTP缓存</center></h2><h3 id="引言-什么是缓存"><a href="#引言-什么是缓存" class="headerlink" title="引言 什么是缓存"></a>引言 什么是缓存</h3><blockquote>
 <p>&ensp;&ensp;通过url请求后台资源即慢,又比较耗流量,HTTP协议为我们提供了控制缓存部分以使Http客户端可以缓存和重用以前获取的资源，从而优化性能，提升体验。简单来说http缓存就是客户端缓存,将一些服务器上的静态文件(css,js,图片等)保存到本地,然后下次在次加载这个文件时根据http缓存方式,不去服务器端读取,而是直接在本地读取。</p>
