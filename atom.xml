@@ -30,11 +30,11 @@
   </entry>
   
   <entry>
-    <title>httpCache</title>
-    <link href="https://sxfed.github.io/2017/07/27/httpCache/"/>
-    <id>https://sxfed.github.io/2017/07/27/httpCache/</id>
+    <title>Http Cache</title>
+    <link href="https://sxfed.github.io/2017/07/27/http-cache/"/>
+    <id>https://sxfed.github.io/2017/07/27/http-cache/</id>
     <published>2017-07-27T06:07:32.000Z</published>
-    <updated>2017-07-28T00:16:26.000Z</updated>
+    <updated>2017-07-28T01:10:20.000Z</updated>
     
     <content type="html"><![CDATA[<h2 id="HTTP缓存"><a href="#HTTP缓存" class="headerlink" title="HTTP缓存"></a><center>HTTP缓存</center></h2><h3 id="引言-什么是缓存"><a href="#引言-什么是缓存" class="headerlink" title="引言 什么是缓存"></a>引言 什么是缓存</h3><blockquote>
 <p>&ensp;&ensp;通过url请求后台资源即慢,又比较耗流量,HTTP协议为我们提供了控制缓存部分以使Http客户端可以缓存和重用以前获取的资源，从而优化性能，提升体验。简单来说http缓存就是客户端缓存,将一些服务器上的静态文件(css,js,图片等)保存到本地,然后下次在次加载这个文件时根据http缓存方式,不去服务器端读取,而是直接在本地读取。</p>
@@ -115,7 +115,7 @@
 <h4 id="二-强缓存与协商缓存"><a href="#二-强缓存与协商缓存" class="headerlink" title="二 强缓存与协商缓存"></a>二 强缓存与协商缓存</h4><h5 id="1-强缓存"><a href="#1-强缓存" class="headerlink" title="1.强缓存"></a>1.强缓存</h5><p>浏览器在第一次请求发生后，再次请求时:浏览器在请求某一资源时，会先获取该资源缓存的header信息，判断是否命中强缓存（cache-control和expires信息），若命中直接从缓存中获取资源信息，包括缓存header信息；本次请求根本就不会与服务器进行通信</p>
 <h5 id="2-协商缓存"><a href="#2-协商缓存" class="headerlink" title="2.协商缓存"></a>2.协商缓存</h5><p>如果没有命中强缓存,浏览器会发送请求到服务器,请求会携带第一次请求返回的有关缓存的header字段信息(Last-Modified/If-Modified-Since和Etag/If-None-Match),由服务器根据请求中的相关header信息来比对结果是否协商缓存命中;若命中,则服务器返回新的响应header信息更新缓存中的对应header信息,但是并不返回资源内容,它会告知浏览器可以直接从缓存获取;否则返回最新的资源内容;</p>
 <h5 id="3-强缓存与协商缓存的区别"><a href="#3-强缓存与协商缓存的区别" class="headerlink" title="3.强缓存与协商缓存的区别"></a>3.强缓存与协商缓存的区别</h5><p>相同点: 都是从缓存中读取数据<br>不同点: 强缓存不会请求服务器,而协商缓存同过访问服务器来告知缓存是否可用,强缓存返回状态吗200 (from cache) 协商缓存 返回304 (not modified)</p>
-<p>如果你看了上面的还是蒙蒙的那么请看下面,当我们第一次请求时打开network,我们将看到下图<br>当我们第一次请求某个网页时所有请求返回状态码均为200<br><img src="https://github.com/qiudong/sxfed.github.io/blob/master/bigimgs/1.png?raw=true" alt="Alt text"><br>当我们再次刷新时可以看到状态码变成了304,和200 size变成from cache<br><img src="https://github.com/qiudong/sxfed.github.io/blob/master/bigimgs/2.png?raw=true" alt="Alt text"><br>当状态码为200时我们点进去可以看到 属性cache-control:max-age属性 和 Expires 属性 可以看出时间均没过期,也就是这是个强缓存,这个文件不会请求服务器<br><img src="https://github.com/qiudong/sxfed.github.io/blob/master/bigimgs/3.png?raw=true" alt="Alt text"><br>当状态码为304时可以看到max-age=0也就是说会请求服务器,和服务器协商,然后服务器根据Eage或者 If-Modified-Since 来判断是否继续使用该缓存,如果判断成功,那么返回状态码304,并且继续使用该缓存,失败则重新加载文件<br><img src="https://github.com/qiudong/sxfed.github.io/blob/master/bigimgs/4.png?raw=true" alt="Alt text"><br>最后贴一张HTTP缓存的流程图<br><img src="https://github.com/qiudong/sxfed.github.io/blob/master/bigimgs/5.png?raw=true" alt="Alt text"></p>
+<p>如果你看了上面的还是蒙蒙的那么请看下面,当我们第一次请求时打开network,我们将看到下图<br>当我们第一次请求某个网页时所有请求返回状态码均为200<br><img src="1.png" alt="Alt text"><br>当我们再次刷新时可以看到状态码变成了304,和200 size变成from cache<br><img src="2.png" alt="Alt text"><br>当状态码为200时我们点进去可以看到 属性cache-control:max-age属性 和 Expires 属性 可以看出时间均没过期,也就是这是个强缓存,这个文件不会请求服务器<br><img src="3.png" alt="Alt text"><br>当状态码为304时可以看到max-age=0也就是说会请求服务器,和服务器协商,然后服务器根据Eage或者 If-Modified-Since 来判断是否继续使用该缓存,如果判断成功,那么返回状态码304,并且继续使用该缓存,失败则重新加载文件<br><img src="4.png" alt="Alt text"><br>最后贴一张HTTP缓存的流程图<br><img src="5.png" alt="Alt text"></p>
 ]]></content>
     
     <summary type="html">
